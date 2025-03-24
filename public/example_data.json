@@ -1,0 +1,197 @@
+{
+  "useCase": "Chatbot that generates use cases based on user input.",
+  "tableData": [
+    { "id": 1, "title": "Use Case 1", "description": "User authentication process." },
+    { "id": 2, "title": "Use Case 2", "description": "Product recommendation system." },
+    { "id": 3, "title": "Use Case 3", "description": "Automated customer support." }
+  ],
+  "data":
+  {
+    "status": "success",
+    "use_cases_result": {
+        "create": [
+            {
+                "use_case_id": "fdb15b3c-a779-498e-a0ab-9c602f0bdd9a",
+                "use_case": "Insert a new customer with their order details.",
+                "query": "INSERT INTO Customers (CustomerID, FirstName, LastName, Email) VALUES (:customer_id, :first_name, :last_name, :email);\nINSERT INTO Orders (OrderID, CustomerID, OrderDate, TotalAmount) VALUES (:order_id, :customer_id, :order_date, :total_amount);",
+                "user_input_columns": [
+                    "customer_id",
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "order_id",
+                    "order_date",
+                    "total_amount"
+                ]
+            },
+            {
+                "use_case_id": "7eb455c1-d053-4760-94f6-0c87a20a1890",
+                "use_case": "Insert a new product into the Products table.",
+                "query": "INSERT INTO Products (ProductID, ProductName, Category, Price) VALUES (:product_id, :product_name, :category, :price);",
+                "user_input_columns": [
+                    "product_id",
+                    "product_name",
+                    "category",
+                    "price"
+                ]
+            },
+            {
+                "use_case_id": "651d94b8-3cb5-4e3b-959d-a8c85c92bb32",
+                "use_case": "Insert a new order item with product and order details.",
+                "query": "INSERT INTO OrderItems (OrderItemID, OrderID, ProductID, Quantity, UnitPrice) VALUES (:order_item_id, :order_id, :product_id, :quantity, :unit_price);",
+                "user_input_columns": [
+                    "order_item_id",
+                    "order_id",
+                    "product_id",
+                    "quantity",
+                    "unit_price"
+                ]
+            },
+            {
+                "use_case_id": "83b68046-0782-4262-a678-87d6092d512b",
+                "use_case": "Insert a new customer with their address details.",
+                "query": "INSERT INTO Customers (CustomerID, FirstName, LastName, Email, AddressID) SELECT :customer_id, :first_name, :last_name, :email, AddressID FROM Addresses WHERE Street = :street AND City = :city;",
+                "user_input_columns": [
+                    "customer_id",
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "street",
+                    "city"
+                ]
+            },
+            {
+                "use_case_id": "b58bd3d8-9bb1-4efa-8b26-28937c9c7111",
+                "use_case": "Insert multiple order items for a single order.",
+                "query": "INSERT INTO OrderItems (OrderItemID, OrderID, ProductID, Quantity, UnitPrice) VALUES (:order_item_id_1, :order_id, :product_id_1, :quantity_1, :unit_price_1), (:order_item_id_2, :order_id, :product_id_2, :quantity_2, :unit_price_2);",
+                "user_input_columns": [
+                    "order_item_id_1",
+                    "order_id",
+                    "product_id_1",
+                    "quantity_1",
+                    "unit_price_1",
+                    "order_item_id_2",
+                    "product_id_2",
+                    "quantity_2",
+                    "unit_price_2"
+                ]
+            }
+        ],
+        "read": [
+            {
+                "use_case_id": "ce70de1d-2cde-4371-aa46-c9933c979cee",
+                "use_case": "Retrieve all customers and their orders with order details.",
+                "query": "SELECT c.CustomerID, c.FirstName, c.LastName, o.OrderID, o.OrderDate, oi.ProductID, oi.Quantity FROM Customers c LEFT JOIN Orders o ON c.CustomerID = o.CustomerID LEFT JOIN OrderItems oi ON o.OrderID = oi.OrderID;",
+                "user_input_columns": []
+            },
+            {
+                "use_case_id": "4be7d885-2183-43ea-97ec-1acac3454301",
+                "use_case": "Retrieve the top 5 most expensive products.",
+                "query": "SELECT ProductName, Price FROM Products ORDER BY Price DESC LIMIT 5;",
+                "user_input_columns": []
+            },
+            {
+                "use_case_id": "8440d302-9900-4101-8081-db55ff9388a3",
+                "use_case": "Retrieve the average order total for a specific customer.",
+                "query": "SELECT AVG(TotalAmount) AS AverageOrderTotal FROM Orders WHERE CustomerID = :customer_id;",
+                "user_input_columns": [
+                    "customer_id"
+                ]
+            },
+            {
+                "use_case_id": "4075d60c-ffcd-4132-9e7f-683a4fac31af",
+                "use_case": "Retrieve all customers who have placed orders in the last month.",
+                "query": "SELECT c.CustomerID, c.FirstName, c.LastName FROM Customers c INNER JOIN Orders o ON c.CustomerID = o.CustomerID WHERE o.OrderDate >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);",
+                "user_input_columns": []
+            }
+        ],
+        "update": [
+            {
+                "use_case_id": "0f4fe81f-f4b7-496d-ac8f-e920021b770c",
+                "use_case": "Update the price of a specific product.",
+                "query": "UPDATE Products SET Price = :new_price WHERE ProductID = :product_id;",
+                "user_input_columns": [
+                    "new_price",
+                    "product_id"
+                ]
+            },
+            {
+                "use_case_id": "23f0cc5f-20b5-4370-9ae3-72ca97398f38",
+                "use_case": "Update the email address of a specific customer.",
+                "query": "UPDATE Customers SET Email = :new_email WHERE CustomerID = :customer_id;",
+                "user_input_columns": [
+                    "new_email",
+                    "customer_id"
+                ]
+            },
+            {
+                "use_case_id": "eb76c472-b7d4-4cfe-bd47-c5377c2f6da9",
+                "use_case": "Update the quantity of an item in an order.",
+                "query": "UPDATE OrderItems SET Quantity = :new_quantity WHERE OrderItemID = :order_item_id;",
+                "user_input_columns": [
+                    "new_quantity",
+                    "order_item_id"
+                ]
+            },
+            {
+                "use_case_id": "9a91ca58-e786-4671-ab5a-59b0d4584de7",
+                "use_case": "Update the order total after changing the quantity of an item.",
+                "query": "UPDATE Orders SET TotalAmount = (SELECT SUM(Quantity * UnitPrice) FROM OrderItems WHERE OrderID = :order_id) WHERE OrderID = :order_id;",
+                "user_input_columns": [
+                    "order_id"
+                ]
+            },
+            {
+                "use_case_id": "03abca35-86b9-46ef-b528-cf080cc3d560",
+                "use_case": "Update the customer's address based on their customer ID.",
+                "query": "UPDATE Addresses SET Street = :new_street, City = :new_city WHERE AddressID = (SELECT AddressID FROM Customers WHERE CustomerID = :customer_id);",
+                "user_input_columns": [
+                    "new_street",
+                    "new_city",
+                    "customer_id"
+                ]
+            }
+        ],
+        "delete": [
+            {
+                "use_case_id": "4fd2272f-2796-4b39-acea-4905f956533c",
+                "use_case": "Delete a specific order.",
+                "query": "DELETE FROM Orders WHERE OrderID = :order_id;",
+                "user_input_columns": [
+                    "order_id"
+                ]
+            },
+            {
+                "use_case_id": "8f2e9b73-f5e8-4192-a0c4-0dfaf83fce39",
+                "use_case": "Delete a specific customer.",
+                "query": "DELETE FROM Customers WHERE CustomerID = :customer_id;",
+                "user_input_columns": [
+                    "customer_id"
+                ]
+            },
+            {
+                "use_case_id": "7e6cb8bf-44bc-4ebf-9f0c-f229061c052d",
+                "use_case": "Delete a specific product.",
+                "query": "DELETE FROM Products WHERE ProductID = :product_id;",
+                "user_input_columns": [
+                    "product_id"
+                ]
+            },
+            {
+                "use_case_id": "6bae1683-cf09-409a-84ed-3a37df740780",
+                "use_case": "Delete all orders older than a specific date.",
+                "query": "DELETE FROM Orders WHERE OrderDate < :order_date;",
+                "user_input_columns": [
+                    "order_date"
+                ]
+            },
+            {
+                "use_case_id": "7d122545-b034-4083-adba-fb7cf0351f37",
+                "use_case": "Delete customers who have not placed any orders.",
+                "query": "DELETE FROM Customers WHERE CustomerID NOT IN (SELECT DISTINCT CustomerID FROM Orders);",
+                "user_input_columns": []
+            }
+        ]
+    }
+}
+}
